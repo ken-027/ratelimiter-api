@@ -13,7 +13,6 @@ describe("/api/v1/counter/fixed-window", () => {
         const res = await request(app).post("/api/v1/counter/fixed-window");
 
         expect(res.statusCode).toBe(201);
-
         expect(res.body.access).toBe("granted");
     });
 });
