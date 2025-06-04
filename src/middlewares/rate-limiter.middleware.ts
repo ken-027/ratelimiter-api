@@ -26,7 +26,7 @@ export const modifyResourceLimit = rateLimitPackage({
 
 export const chatResourceLimit = rateLimitPackage({
     windowMs: 1000 * 60 * 60 * 24, // 24 hours
-    limit: PRODUCTION ? 10 : 20,
+    limit: PRODUCTION ? 10 : 2,
     standardHeaders: true,
     legacyHeaders: false,
     skipFailedRequests: true,
@@ -35,7 +35,8 @@ export const chatResourceLimit = rateLimitPackage({
               sendCommand: (...args: string[]) => redisClient.sendCommand(args),
           })
         : undefined,
-    keyGenerator: (req) => req.body.token || req.ip || "unknown",
+    keyGenerator: (req) =>
+        (req.headers["custom-header"] as string) || req.ip || "unknown",
     message: {
         message:
             "🤖 Chatbot response limit reached for today. Please try again tomorrow",
