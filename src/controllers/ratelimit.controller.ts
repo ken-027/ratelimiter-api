@@ -1,8 +1,8 @@
 import { Request, Response } from "express";
 
-export async function fixedWindow(
+export async function slidingWindow(
     _request: Request<never, unknown>,
     response: Response,
 ) {
-    response.status(201).json({ access: "granted" });
+    response.status(201).json({ limit: "granted" });
 }
