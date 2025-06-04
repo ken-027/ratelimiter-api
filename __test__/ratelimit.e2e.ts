@@ -15,4 +15,11 @@ describe("/api/v1/counter/fixed-window", () => {
         expect(res.statusCode).toBe(201);
         expect(res.body.access).toBe("granted");
     });
+
+    it("should access fixed window algo for deep research", async () => {
+        const res = await request(app).post("/api/v1/counter/fixed-window/deep-research");
+
+        expect(res.statusCode).toBe(201);
+        expect(res.body.access).toBe("granted");
+    });
 });

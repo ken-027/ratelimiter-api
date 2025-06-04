@@ -1,12 +1,15 @@
 import { Router } from "express";
-import { chatResourceLimit } from "@/middlewares/rate-limiter.middleware";
-import { fixedWindow } from "@/controllers/ratelimit.controller";
+import {
+    slidingWindow,
+    slidingWindowForDeepResearch,
+} from "@/middlewares/rate-limiter.middleware";
+import { slidingWindow as slidingWindowController } from "@/controllers/ratelimit.controller";
 
 const rateLimitRoutes = Router();
 
+rateLimitRoutes.route("/counter/fixed-window").post(slidingWindow, slidingWindowController);
 rateLimitRoutes
-    .route("/counter/fixed-window")
-    .post(chatResourceLimit, fixedWindow);
-
+    .route("/counter/fixed-window/deep-research")
+    .post(slidingWindowForDeepResearch, slidingWindowController);
 
 export default rateLimitRoutes;
