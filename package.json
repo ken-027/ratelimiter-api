@@ -26,7 +26,7 @@
     "zod": "^3.23.8",
     "dependencies": {
         "@emailjs/nodejs": "^5.0.2",
-        "axios": "^1.7.7",
+        "axios": "^1.10.0",
         "body-parser": "^1.20.3",
         "connect-pg-simple": "^10.0.0",
         "cookie-parser": "^1.4.6",
@@ -36,8 +36,7 @@
         "drizzle-orm": "^0.43.1",
         "esbuild": "^0.25.4",
         "esbuild-plugin-copy": "^2.1.1",
-        "express": "^4.21.0",
-        "express-async-errors": "^3.1.1",
+        "express": "^5.1.0",
         "express-rate-limit": "^7.4.0",
         "express-session": "^1.18.1",
         "helmet": "^7.1.0",
@@ -48,17 +47,16 @@
         "mongodb": "^6.16.0",
         "morgan": "^1.10.0",
         "node-postgres": "^0.6.2",
-        "openai": "^4.97.0",
         "passport": "^0.7.0",
         "pg": "^8.16.0",
         "postgres": "^3.4.4",
         "pushover-notifications": "^1.2.3",
         "rate-limit-redis": "^4.2.0",
-        "redis": "^5.0.1",
+        "redis": "^5.6.0",
         "swagger-jsdoc": "^6.2.8",
         "swagger-ui-dist": "^5.21.0",
         "swagger-ui-express": "^5.0.1",
-        "zod": "^3.23.8"
+        "zod": "^4.0.5"
     },
     "devDependencies": {
         "@eslint/js": "^9.10.0",

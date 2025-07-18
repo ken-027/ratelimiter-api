@@ -1,13 +1,19 @@
 import chalk from "chalk";
-import { PORT, PRODUCTION } from "@/config/env";
-import { initializeRedisConnection } from "./config/redis.connection";
+import { PORT } from "@/config/env";
+import {
+    initializeRedisConnection,
+    redisClient,
+} from "./config/redis.connection";
 
-if (PRODUCTION) {
-    initializeRedisConnection();
-}
+initializeRedisConnection();
 
 import app from "./app";
 
 app.listen(PORT, () => {
     console.log(chalk.bgYellow(" listening on port: "), chalk.yellow(PORT));
+});
+
+process.on("SIGINT", async () => {
+    await redisClient.destroy();
+    console.log("redis destroy");
 });

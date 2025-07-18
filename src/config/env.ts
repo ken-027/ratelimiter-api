@@ -40,3 +40,5 @@ export const ALLOWED_ORIGINS =
         : env.ALLOWED_ORIGINS?.replace(/\s+/g, "")?.split(",");
 
 export const SESSION_SECRET = env.SESSION_SECRET as string;
+
+export const CRYPT_ALGO = env.CRYPT_ALGO as string;

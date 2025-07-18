@@ -1,0 +1,10 @@
+node_modules
+__mocks__
+__test__
+.github
+.vecel
+.vscode
+.env
+.env.sample
+
+vercel.json

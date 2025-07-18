@@ -1,0 +1,31 @@
+name: Build and Push Image
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: 📦 Get version from package.json
+        id: pkg
+        run: echo "version=$(jq -r .version package.json)" >> $GITHUB_OUTPUT
+
+      - name: Login to docker
+        run: docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+
+      - name: 🛠️ Build and Push Docker Image
+        uses: docker/build-push-action@v5
+        with:
+            context: .
+            push: true
+            tags: |
+              ken027/ratelimiter-api:latest
+              ken027/ratelimiter-api:${{ steps.pkg.outputs.version }}

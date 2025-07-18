@@ -2,6 +2,9 @@ import rateLimitPackage from "express-rate-limit";
 import { PRODUCTION } from "../config/env";
 import { RedisStore } from "rate-limit-redis";
 import { redisClient } from "@/config/redis.connection";
+import getIP from "@/utils/getIP.util";
+
+const keyGenerator = getIP;
 
 const rateLimit = rateLimitPackage({
     windowMs: 60 * 1000, // per minute
@@ -35,8 +38,7 @@ export const slidingWindow = rateLimitPackage({
               sendCommand: (...args: string[]) => redisClient.sendCommand(args),
           })
         : undefined,
-    keyGenerator: (req) =>
-        (req.headers["custom-header"] as string) || req.ip || "unknown",
+    keyGenerator,
 });
 
 export const slidingWindowForDeepResearch = rateLimitPackage({
