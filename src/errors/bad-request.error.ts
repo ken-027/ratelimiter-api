@@ -1,13 +1,13 @@
-import HTTPCodes from "@/constant/http-codes";
+import HTTPCodes from "@/enum/http-codes.enum";
 import { RequestHandlerError } from "./request-handler.error";
 
 export class BadRequestError extends RequestHandlerError {
-    statusCode: number = HTTPCodes.BadRequest;
+    statusCode: number = HTTPCodes.BAD_REQUEST;
     errorMessage: string;
 
     constructor(message: string) {
         super(message);
-        this.name = "BadRequest";
+        this.name = "BAD_REQUEST";
         this.errorMessage = message;
     }
 }

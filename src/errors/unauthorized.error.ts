@@ -1,8 +1,8 @@
-import HTTPCodes from "@/constant/http-codes";
+import HTTPCodes from "@/enum/http-codes.enum";
 import { RequestHandlerError } from "./request-handler.error";
 
 export class UnAuthorizedError extends RequestHandlerError {
-    statusCode: number = HTTPCodes.Unauthorized;
+    statusCode: number = HTTPCodes.UNAUTHORIZE;
     errorMessage: string;
 
     constructor(message: string) {

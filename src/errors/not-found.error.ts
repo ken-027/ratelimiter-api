@@ -1,8 +1,8 @@
-import HTTPCodes from "@/constant/http-codes";
+import HTTPCodes from "@/enum/http-codes.enum";
 import { RequestHandlerError } from "./request-handler.error";
 
 export class NotFoundError extends RequestHandlerError {
-    statusCode: number = HTTPCodes.NotFound;
+    statusCode: number = HTTPCodes.NOT_FOUND;
     errorMessage: string;
 
     constructor(message: string) {

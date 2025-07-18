@@ -1,4 +1,4 @@
-import HTTPCodes from "@/constant/http-codes";
+import HTTPCodes from "@/enum/http-codes.enum";
 
 export interface IRequestHandlerError {
     statusCode: number;
@@ -7,7 +7,7 @@ export interface IRequestHandlerError {
 }
 
 export class RequestHandlerError extends Error {
-    statusCode: number = HTTPCodes.InternalServerError;
+    statusCode: number = HTTPCodes.INTERNAL_SERVER_ERROR;
     errorMessage: string;
 
     constructor(message: string) {

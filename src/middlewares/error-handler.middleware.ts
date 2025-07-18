@@ -1,5 +1,5 @@
 import { NODE_ENV } from "@/config/env";
-import HTTPCodes from "@/constant/http-codes";
+import HTTPCodes from "@/enum/http-codes.enum";
 import { RequestHandlerError } from "@/errors/request-handler.error";
 import { devLog } from "@/utils/logger.util";
 import { AxiosError } from "axios";
@@ -50,12 +50,12 @@ const handleGenericError = (error: Error, res: Response) => {
     };
 
     if (NODE_ENV === "production") {
-        sendErrorResponse(res, HTTPCodes.InternalServerError, {
+        sendErrorResponse(res, HTTPCodes.INTERNAL_SERVER_ERROR, {
             error: "Internal Server Error",
         });
         console.error(errorObj);
     } else {
-        sendErrorResponse(res, HTTPCodes.InternalServerError, errorObj);
+        sendErrorResponse(res, HTTPCodes.INTERNAL_SERVER_ERROR, errorObj);
     }
 };
 
@@ -65,7 +65,7 @@ const handleAxiosError = (error: AxiosError, res: Response) => {
         res,
         Number.isInteger(error?.code)
             ? (error.code as never)
-            : HTTPCodes.InternalServerError,
+            : HTTPCodes.INTERNAL_SERVER_ERROR,
         {
             name: error.name,
             url: error.config?.url,
@@ -75,5 +75,5 @@ const handleAxiosError = (error: AxiosError, res: Response) => {
 };
 
 const handleZodError = (error: ZodError, res: Response) => {
-    sendErrorResponse(res, HTTPCodes.BadRequest, error.issues);
+    sendErrorResponse(res, HTTPCodes.BAD_REQUEST, error.issues);
 };
