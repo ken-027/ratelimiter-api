@@ -1,12 +1,6 @@
-import FixedWindow from "@/algorithms/fixed-window";
-import HTTPCodes from "@/enum/http-codes.enum";
-import { Limit, TimeLimit } from "@/enum/limiter.enum";
-import { BadRequestError } from "@/errors/bad-request.error";
-import { getClientId } from "@/utils/getIP.util";
 import { NextFunction, Request, Response } from "express";
-
-type LimitKey = keyof typeof Limit;
-type TimeLimitKey = keyof typeof TimeLimit;
+import BaseMiddleware from "./rate-limiter/base-middleware";
+import FixedWindowMiddleware from "./rate-limiter/fixed-window";
 
 /**
  * @swagger
@@ -69,72 +63,12 @@ export async function fixedWindowMiddleware(
     response: Response,
     next: NextFunction,
 ) {
-    const ratelimiter = new FixedWindow();
+    const fixedWindowMiddleware: BaseMiddleware = new FixedWindowMiddleware(
+        request,
+        response,
+    );
 
-    const clientId = getClientId(request);
-
-    const limitHeaderName = "x-ratelimit-limit";
-    const timeLimitHeaderName = "x-ratelimit-window";
-
-    const timeLimitConfig = request.headers[timeLimitHeaderName]?.toString();
-    const limitConfig = request.headers[limitHeaderName]?.toString();
-
-    const availableTimeLimit: TimeLimitKey[] = [
-        "DAY",
-        "HOUR",
-        "MINUTE",
-        "MONTH",
-        "SECOND",
-        "WEEK",
-        "YEAR",
-    ];
-
-    const availableLimit: LimitKey[] = [
-        "ADMIN",
-        "BURSTY",
-        "NORMAL",
-        "PREMIUM",
-        "STRICT",
-    ];
-
-    if (timeLimitConfig) {
-        const keyTimeLimit = timeLimitConfig.toUpperCase();
-
-        if (!availableTimeLimit.includes(keyTimeLimit as never))
-            throw new BadRequestError(
-                `Available options are ${availableTimeLimit.join(", ")} for header '${timeLimitHeaderName}'`,
-            );
-
-        ratelimiter.setTimeLimit(TimeLimit[keyTimeLimit as TimeLimitKey]);
-    }
-
-    if (limitConfig) {
-        const keyLimit = limitConfig.toUpperCase();
-
-        if (!availableLimit.includes(keyLimit as never))
-            throw new BadRequestError(
-                `Available options are ${availableLimit.join(", ")} for header '${limitHeaderName}'`,
-            );
-
-        ratelimiter.setLimit(Limit[keyLimit as LimitKey]);
-    }
-
-    const isAllowed = await ratelimiter.isAllowed(clientId);
-
-    request.body = {
-        rateLimitInfo: ratelimiter.getInfo(),
-    };
-
-    response.set({
-        "x-ratelimit-limit": request.body.rateLimitInfo.limit,
-        "x-ratelimit-remaining": request.body.rateLimitInfo.remaining,
-        "x-ratelimit-reset": request.body.rateLimitInfo.reset,
-    });
-
-    if (!isAllowed)
-        return response.status(HTTPCodes.TOO_MANY_REQUEST).json({
-            message: "You're reach your limit, please try again later.",
-        });
+    await fixedWindowMiddleware.process();
 
     return next();
 }
