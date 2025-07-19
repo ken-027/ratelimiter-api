@@ -30,7 +30,9 @@ afterEach(async () => {
     redisData.clear();
 });
 
-// afterAll(async () => {});
+afterAll(async () => {
+    jest.clearAllTimers();
+});
 
 describe("fixed window v1 algorithm", () => {
     it("should access fixed window algo", async () => {
@@ -52,7 +54,7 @@ describe("fixed window v1 algorithm", () => {
 
 describe("fixed window v2 algorithm", () => {
     it("should return 200", async () => {
-        request(app).post("/api/v2/counter/fixed-window").expect(200);
+        return request(app).post("/api/v2/counter/fixed-window").expect(200);
     });
 
     it("should return 429 too many request", async () => {
@@ -68,7 +70,7 @@ describe("fixed window v2 algorithm", () => {
 
 describe("sliding window log v2 algorithm", () => {
     it("should return 200", async () => {
-        request(app).post("/api/v2/sliding-window-log").expect(200);
+        return request(app).post("/api/v2/sliding-window-log").expect(200);
     });
 
     it("should return 429 too many request", async () => {

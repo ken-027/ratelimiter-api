@@ -9,7 +9,7 @@
         "dev": "nodemon",
         "prepare": "ts-patch install -s",
         "test": "jest",
-        "test:e2e": "jest --testPathPattern=__test__ --testMatch=**/*.e2e.ts",
+        "test:e2e": "jest --testPathPattern=__test__ --testMatch=**/*.e2e.ts --detectOpenHandles",
         "format": "pnpm exec prettier . --write --cache",
         "db:generate": "drizzle-kit generate --config=drizzle.config.ts",
         "db:migrate": "drizzle-kit migrate --config=drizzle.config.ts",
