@@ -1,16 +1,11 @@
-import { redisClient } from "@/config/redis.connection";
 import { Limit, TimeLimit } from "@/enum/limiter.enum";
-import { FixedWindow as FixedWindowType } from "@/types/rate-limit";
+import { Algorithm, FixedWindow as FixedWindowType } from "@/types/rate-limit";
 import moment from "moment";
+import BaseAlgo from "./base-algo";
 
-export default class FixedWindow {
-    private limit: Limit = Limit.NORMAL;
-    private timeLimit: TimeLimit = TimeLimit.MINUTE;
-    private remaining: number = this.limit;
-    private reset: number = this.timeLimit;
-
+export default class FixedWindow extends BaseAlgo implements Algorithm {
     async isAllowed(key: string) {
-        const getCache = await redisClient.get(key);
+        const getCache = await this.cache.get(key);
 
         const redisData = getCache
             ? (JSON.parse(getCache) as FixedWindowType)
@@ -30,7 +25,7 @@ export default class FixedWindow {
 
         if (reachLimit && withinTimeLimit) return false;
 
-        await redisClient.set(
+        await this.cache.set(
             key,
             JSON.stringify({
                 count,
