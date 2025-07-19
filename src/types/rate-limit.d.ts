@@ -5,6 +5,8 @@ export interface FixedWindow {
     timestamp: Date;
 }
 
+export type SlidingLog = Date[];
+
 export interface Algorithm {
     isAllowed: (key: string) => Promise<boolean>;
     setLimit: (limit: Limit) => void;
