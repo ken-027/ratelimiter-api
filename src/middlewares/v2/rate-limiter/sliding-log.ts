@@ -1,12 +1,12 @@
 import BaseMiddleware from "./base-middleware";
 import { Algorithm } from "@/types/rate-limit";
-import FixedWindow from "@/algorithms/fixed-window";
+import SlidingLog from "@/algorithms/sliding-log";
 
 /**
  * @swagger
- * /api/v2/counter/fixed-window:
+ * /api/v2/sliding-window-log:
  *   post:
- *     summary: fixed window counter algorithm
+ *     summary: sliding window log algorithm
  *     tags:
  *       - Ratelimit V2
  *     parameters:
@@ -58,8 +58,8 @@ import FixedWindow from "@/algorithms/fixed-window";
  *             example:
  *               access: granted
  */
-export default class FixedWindowMiddleware extends BaseMiddleware {
+export default class SlidingLogMiddleware extends BaseMiddleware {
     factoryClass(): Algorithm {
-        return new FixedWindow();
+        return new SlidingLog();
     }
 }

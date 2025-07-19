@@ -1,21 +1,24 @@
-import { Limit, TimeLimit } from "@/enum/limiter.enum";
-import { Algorithm, FixedWindow as FixedWindowType } from "@/types/rate-limit";
+import { FixedWindow as FixedWindowType } from "@/types/rate-limit";
 import moment from "moment";
-import BaseAlgo from "./base-algo";
+import Algorithm from "./algorithm";
 
-export default class FixedWindow extends BaseAlgo implements Algorithm {
+export default class FixedWindow extends Algorithm {
+    protected readonly prefix = "fw";
+
     async isAllowed(key: string) {
-        const getCache = await this.cache.get(key);
+        const prefixKey = `${this.prefix}-${key}`;
+        const getCache = await this.cache.get(prefixKey);
+        const now = new Date();
 
         const redisData = getCache
             ? (JSON.parse(getCache) as FixedWindowType)
-            : { count: 0, timestamp: new Date() };
+            : { count: 0, timestamp: now };
 
         const timeDiff = moment().diff(redisData.timestamp, "seconds");
         const isTimeOverlap = this.timeLimit <= timeDiff;
 
         const count = isTimeOverlap ? 1 : redisData.count + 1;
-        const timestamp = isTimeOverlap ? new Date() : redisData.timestamp;
+        const timestamp = isTimeOverlap ? now : redisData.timestamp;
 
         const reachLimit = redisData.count >= this.limit;
         const withinTimeLimit = this.timeLimit >= timeDiff;
@@ -26,7 +29,7 @@ export default class FixedWindow extends BaseAlgo implements Algorithm {
         if (reachLimit && withinTimeLimit) return false;
 
         await this.cache.set(
-            key,
+            prefixKey,
             JSON.stringify({
                 count,
                 timestamp,
@@ -34,21 +37,5 @@ export default class FixedWindow extends BaseAlgo implements Algorithm {
         );
 
         return true;
-    }
-
-    getInfo() {
-        return {
-            reset: this.reset,
-            remaining: this.remaining,
-            limit: this.limit,
-        };
-    }
-
-    setLimit(limit: Limit) {
-        this.limit = limit;
-    }
-
-    setTimeLimit(timeLimit: TimeLimit) {
-        this.timeLimit = timeLimit;
     }
 }
