@@ -35,7 +35,9 @@ export default class SlidingLog extends Algorithm {
 
         if (limitReach) return false;
 
-        await this.cache.set(prefixKey, JSON.stringify(logs));
+        await this.cache.set(prefixKey, JSON.stringify(logs), {
+            EX: this.timeLimit,
+        });
 
         return true;
     }
