@@ -1,13 +1,13 @@
 import BaseMiddleware from "./base-middleware";
 import { Algorithm } from "@/types/rate-limit";
-import SlidingLog from "@/algorithms/sliding-log";
 import { Request, Response } from "express";
+import SlidingCounter from "@/algorithms/sliding-counter";
 
 /**
  * @swagger
- * /api/v2/sliding-window-log:
+ * /api/v2/counter/sliding-window:
  *   post:
- *     summary: sliding window log algorithm
+ *     summary: sliding window counter log algorithm
  *     tags:
  *       - Ratelimit V2
  *     parameters:
@@ -59,7 +59,7 @@ import { Request, Response } from "express";
  *             example:
  *               access: granted
  */
-export default class SlidingLogMiddleware extends BaseMiddleware {
+export default class SlidingCounterMiddleware extends BaseMiddleware {
     constructor(request: Request, response: Response) {
         super(request, response);
 
@@ -69,6 +69,6 @@ export default class SlidingLogMiddleware extends BaseMiddleware {
     }
 
     factoryClass(): Algorithm {
-        return new SlidingLog();
+        return new SlidingCounter();
     }
 }

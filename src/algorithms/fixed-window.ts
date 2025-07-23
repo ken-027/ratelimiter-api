@@ -7,12 +7,13 @@ export default class FixedWindow extends Algorithm {
 
     async isAllowed(key: string) {
         const prefixKey = `${this.prefix}-${key}`;
-        const getCache = await this.cache.get(prefixKey);
+        const getCache = await this.cache.hGetAll(prefixKey);
         const now = new Date();
 
-        const redisData = getCache
-            ? (JSON.parse(getCache) as FixedWindowType)
-            : { count: 0, timestamp: now };
+        const redisData: FixedWindowType = {
+            timestamp: new Date(getCache?.timestamp?.toString() || now),
+            count: parseInt(getCache?.count || "0"),
+        };
 
         const timeDiff = moment().diff(redisData.timestamp, "seconds");
         const isTimeOverlap = this.timeLimit <= timeDiff;
@@ -28,13 +29,13 @@ export default class FixedWindow extends Algorithm {
 
         if (reachLimit && withinTimeLimit) return false;
 
-        await this.cache.set(
-            prefixKey,
-            JSON.stringify({
-                count,
-                timestamp,
-            }),
-        );
+        await Promise.all([
+            this.cache.hIncrBy(prefixKey, "count", 1),
+            this.cache.hSet(prefixKey, "timestamp", timestamp.toISOString()),
+        ]);
+
+        if (!getCache?.count)
+            await this.cache.expire(prefixKey, this.timeLimit);
 
         return true;
     }

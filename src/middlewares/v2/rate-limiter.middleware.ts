@@ -2,6 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import BaseMiddleware from "./rate-limiter/base-middleware";
 import FixedWindowMiddleware from "./rate-limiter/fixed-window";
 import SlidingLogMiddleware from "./rate-limiter/sliding-log";
+import SlidingCounterMiddleware from "./rate-limiter/sliding-counter";
 
 export async function fixedWindowMiddleware(
     request: Request,
@@ -29,6 +30,21 @@ export async function slidingLogMiddleware(
     );
 
     await slidingLogMiddleware.process();
+
+    return next();
+}
+
+export async function slidingCounterMiddleware(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+) {
+    const slidingCounterMiddleware: BaseMiddleware = new SlidingCounterMiddleware(
+        request,
+        response,
+    );
+
+    await slidingCounterMiddleware.process();
 
     return next();
 }

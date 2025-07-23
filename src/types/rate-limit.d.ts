@@ -7,6 +7,9 @@ export interface FixedWindow {
 
 export type SlidingLog = Date[];
 
+export type SlidingCounter = {
+    [string]: number;
+};
 export interface Algorithm {
     isAllowed: (key: string) => Promise<boolean>;
     setLimit: (limit: Limit) => void;
@@ -15,4 +18,5 @@ export interface Algorithm {
 }
 
 export type LimitKey = keyof typeof Limit;
+
 export type TimeLimitKey = keyof typeof TimeLimit;
