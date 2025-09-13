@@ -85,9 +85,19 @@ export default class SlidingCounter extends Algorithm {
 
         if (limitReach) return false;
 
-        await this.cache.hIncrBy(prefixKey, `${fromTime}--${toTime}`, 1);
-        await this.cache.expire(prefixKey, this.timeLimit);
+        await this.saveCache(prefixKey, fromTime, toTime);
 
         return true;
+    }
+
+    private async saveCache(
+        key: string,
+        fromTime: string,
+        toTime: string,
+    ): Promise<void> {
+        Promise.all([
+            this.cache.hIncrBy(key, `${fromTime}--${toTime}`, 1),
+            this.cache.expire(key, this.timeLimit),
+        ]);
     }
 }

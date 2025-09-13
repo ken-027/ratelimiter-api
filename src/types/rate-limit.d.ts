@@ -5,6 +5,11 @@ export interface FixedWindow {
     timestamp: Date;
 }
 
+export interface TokenBucket {
+    tokens: number;
+    lastRefill: Date;
+}
+
 export type SlidingLog = Date[];
 
 export type SlidingCounter = {

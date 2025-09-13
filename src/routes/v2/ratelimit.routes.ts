@@ -7,6 +7,7 @@ import {
     fixedWindowMiddleware,
     slidingCounterMiddleware,
     slidingLogMiddleware,
+    tokenBucketMiddleware,
 } from "@/middlewares/v2/rate-limiter.middleware";
 
 const rateLimitRoutesV2 = Router();
@@ -17,7 +18,7 @@ rateLimitRoutesV2
 rateLimitRoutesV2
     .route("/counter/sliding-window")
     .post(slidingCounterMiddleware, ratelimitResponse);
-rateLimitRoutesV2.route("/bucket/token").post(ratelimitResponse);
+rateLimitRoutesV2.route("/bucket/token").post(tokenBucketMiddleware, ratelimitResponse);
 rateLimitRoutesV2.route("/bucket/leaky").post(ratelimitResponse);
 rateLimitRoutesV2
     .route("/sliding-window-log")

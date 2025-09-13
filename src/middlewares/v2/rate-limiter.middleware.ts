@@ -3,6 +3,7 @@ import BaseMiddleware from "./rate-limiter/base-middleware";
 import FixedWindowMiddleware from "./rate-limiter/fixed-window";
 import SlidingLogMiddleware from "./rate-limiter/sliding-log";
 import SlidingCounterMiddleware from "./rate-limiter/sliding-counter";
+import TokenBucketMiddleware from "./rate-limiter/token-bucket";
 
 export async function fixedWindowMiddleware(
     request: Request,
@@ -39,12 +40,26 @@ export async function slidingCounterMiddleware(
     response: Response,
     next: NextFunction,
 ) {
-    const slidingCounterMiddleware: BaseMiddleware = new SlidingCounterMiddleware(
+    const slidingCounterMiddleware: BaseMiddleware =
+        new SlidingCounterMiddleware(request, response);
+
+    await slidingCounterMiddleware.process();
+
+    return next();
+}
+
+export async function tokenBucketMiddleware(
+    request: Request,
+    response: Response,
+    next: NextFunction,
+) {
+    const tokenBucketMiddleware: BaseMiddleware = new TokenBucketMiddleware(
         request,
         response,
     );
 
-    await slidingCounterMiddleware.process();
+
+    await tokenBucketMiddleware.process();
 
     return next();
 }
